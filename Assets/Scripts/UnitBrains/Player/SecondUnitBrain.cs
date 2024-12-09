@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
+using GluonGui.Dialog;
 using Model.Runtime.Projectiles;
+using PlasticPipe.PlasticProtocol.Messages;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace UnitBrains.Player
 {
@@ -41,12 +45,27 @@ namespace UnitBrains.Player
         {
             ///////////////////////////////////////
             // Homework 1.4 (1st block, 4rd module)
-            ///////////////////////////////////////
+            
             List<Vector2Int> result = GetReachableTargets();
-            while (result.Count > 1)
+            if (result.Count == 0) 
             {
-                result.RemoveAt(result.Count - 1);
+            return result;
             }
+            float minDistance  = float.MaxValue;
+            Vector2Int closesTarget = Vector2Int.zero;
+
+            foreach (Vector2Int target in result)
+            {
+                float distance = DistanceToOwnBase(target);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closesTarget = target;
+                }
+            }
+            result.Clear();
+            result.Add(closesTarget);
+
             return result;
             ///////////////////////////////////////
         }
